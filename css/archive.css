@@ -1,0 +1,67 @@
+/* 데이터 아카이브 페이지 전용 스타일 (archive.php inline <style> 이관) */
+	td.resultsWrap {
+		cursor: pointer;
+	}
+	.nav-subtitle {
+		margin-top: 18px;
+		
+	}
+	.navbar.navbar-vertical .navbar-nav .nav-link, .navbar.navbar-vertical .navbar-nav .nav-subtitle {
+		padding: 0 1.5rem !important;
+	}
+	.nav-link.subMenu span{
+		margin-left: 10px;
+	}
+	.nav-link.subMenu:first-child {
+		margin-top: 5px;
+	}
+	.nav-vertical.nav.nav-tabs .nav-collapse .nav-link {
+		line-height: 200%;
+	}
+	.pointer, .getFileDataTrigger, .getSearchFileDataTrigger {
+		cursor: pointer;
+		cursor: hand;
+	}
+	.breadcrumb .breadcrumb-item.active {
+		color: #377dff;
+	}
+	#mainIndexWrap, #subWrap {
+		padding-top: 5rem !important;
+	}
+	#exampleModalFullscreen iframe {
+		width: 100%;
+		height: 100%;
+	}
+	#staticBackdrop .modal-content {
+		-webkit-box-shadow: 0px 0px 13px -3px #a1a1a1;
+		box-shadow: 0px 0px 13px -3px #a1a1a1;
+	}
+	details.searchResultsfileList summary:nth-child(1) { 
+		display: none;
+		
+	}
+	[data-filetype="nope"] {
+		font-weight: bold;
+	}
+	
+	footer {
+		background-color: #f8f8f8!important;
+		color: #000;
+	}
+	.fileCount {
+		color: #FF733C;
+		font-size: 85%;
+		margin-left: 5px;
+	}
+	/* 검색 로딩 스피너 */
+	@keyframes nstpSpin {
+		from { transform: rotate(0deg); }
+		to   { transform: rotate(360deg); }
+	}
+	.icon-spin {
+		display: inline-block;
+		animation: nstpSpin 0.8s linear infinite;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.icon-spin { animation-duration: 2.4s; }
+	}

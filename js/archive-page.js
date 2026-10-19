@@ -387,34 +387,186 @@
 			}
 		});
 	});
-	$('#exampleModalFullscreen').on('shown.bs.modal', function (e) {
-		var filePath = $(e.relatedTarget).data('path');
-		$("#newFileLinkForDownloadPath").val(filePath);
-		$('h5#exampleModalFullscreenLabel').text($(e.relatedTarget).text()); 
-		
-		var payload = {};
-		payload["path"] = filePath;
+	/* ---------- 모달: PDF 본문을 글자로 먼저 보여 주고, 버튼으로 원본 PDF ----------
+	   본문은 검색 색인(ES)의 쪽별 글자(/api/archive/text). 글자가 없거나 불러오지 못하면 바로 원본 PDF. */
+	const DOC_CHUNK = 20;
+	const doc = { path: '', words: [], first: 0, last: 0, lastPage: 0, seq: 0, pdfUrl: '', pdfAt: 0, hasText: false, busy: false };
+	const $docModal = $('#exampleModalFullscreen');
+
+	function docEnsureMarkup() {
+		if ($docModal.find('.docText').length) return;
+		$docModal.find('.modal-body').prepend(
+			'<div class="docText">' +
+				'<p class="docNotice"><i class="bi-info-circle me-1"></i>문서에서 자동으로 읽어 낸 글자라 원본과 다를 수 있습니다. 표·서명·도장 등은 <button type="button" class="btn btn-link p-0 align-baseline docShowPdf">원본 PDF</button>로 확인하세요.</p>' +
+				'<div class="text-center"><button type="button" class="btn btn-outline-secondary btn-sm docPrev" hidden>이전 쪽 보기</button></div>' +
+				'<div class="docPages"></div>' +
+				'<div class="text-center"><button type="button" class="btn btn-outline-secondary btn-sm docNext" hidden>다음 쪽 보기</button></div>' +
+				'<p class="docStatus text-center text-muted"></p>' +
+			'</div>');
+		$docModal.find('.modal-footer').prepend('<button type="button" class="btn btn-outline-primary me-auto docToggle" hidden>원본 PDF 보기</button>');
+		$docModal.find('iframe').hide();
+	}
+	function docEsc(t) {
+		return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+	}
+	function docMark(html) {
+		if (!doc.words.length) return html;
+		const re = new RegExp('(' + doc.words.map(function (w) { return docEsc(w).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')', 'g');
+		return html.replace(re, '<mark>$1</mark>');
+	}
+	function docPageHtml(p) {
+		let h = '<section class="docPage" data-page="' + p.page + '">' +
+			'<div class="docPageHead"><span>' + p.page + ' / ' + doc.lastPage + '쪽</span>' +
+			'<button type="button" class="btn btn-link btn-sm p-0 docPagePdf" data-page="' + p.page + '">이 쪽 원본 보기</button></div>';
+		if (p.image) h += '<p class="docImage"><i class="bi-image me-1"></i>[이미지 · 원본 확인 요망]</p>';
+		if (p.text.trim()) h += '<div class="docPageText">' + docMark(docEsc(p.text)) + '</div>';
+		else if (!p.image) h += '<p class="docImage"><i class="bi-file-earmark me-1"></i>[글자를 읽지 못한 쪽 · 원본 확인 요망]</p>';
+		return h + '</section>';
+	}
+	function docButtons() {
+		$docModal.find('.docPrev').prop('hidden', !(doc.first > 1));
+		$docModal.find('.docNext').prop('hidden', !(doc.last < doc.lastPage));
+	}
+	function docScrollTo(page) {
+		const el = $docModal.find('.docPage[data-page="' + page + '"]')[0];
+		if (el) el.scrollIntoView({ block: 'start' });
+	}
+	// place: 'replace' | 'append' | 'prepend'
+	function docLoad(params, place, then) {
+		const seq = doc.seq;
+		doc.busy = true;
+		$docModal.find('.docStatus').text('불러오는 중…');
+		$.ajax({
+			url: '/api/archive/text',
+			type: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify($.extend({ path: doc.path }, params)),
+			success: function (obj) {
+				if (seq !== doc.seq) return;
+				doc.busy = false;
+				$docModal.find('.docStatus').text('');
+				if (!obj.status || !obj.pages.length) {
+					if (place === 'replace') docShowPdf();
+					return;
+				}
+				doc.hasText = true;
+				doc.lastPage = obj.lastPage;
+				const html = obj.pages.map(docPageHtml).join('');
+				const $pages = $docModal.find('.docPages');
+				const body = $docModal.find('.modal-body')[0];
+				if (place === 'append') {
+					$pages.append(html);
+				} else if (place === 'prepend') {
+					const before = body.scrollHeight;
+					$pages.prepend(html);
+					body.scrollTop += body.scrollHeight - before;   // 보던 자리 유지
+				} else {
+					$pages.html(html);
+					body.scrollTop = 0;
+				}
+				const firstP = obj.pages[0].page, lastP = obj.pages[obj.pages.length - 1].page;
+				if (place !== 'append') doc.first = firstP;
+				if (place !== 'prepend') doc.last = lastP;
+				if (place === 'replace') { doc.first = firstP; doc.last = lastP; }
+				$docModal.find('.docToggle').prop('hidden', false);
+				docButtons();
+				if (then) then(obj);
+			},
+			error: function () {
+				if (seq !== doc.seq) return;
+				doc.busy = false;
+				$docModal.find('.docStatus').text('');
+				if (place === 'replace') docShowPdf();
+				else $docModal.find('.docStatus').text('불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+			}
+		});
+	}
+	function docShowText() {
+		$docModal.find('iframe').hide();
+		$docModal.find('.docText').show();
+		$docModal.find('.docToggle').text('원본 PDF 보기');
+	}
+	// 원본 PDF (page 가 있으면 그 쪽). 받은 링크는 10분 유효라 9분이 지나면 다시 받는다
+	function docShowPdf(page) {
+		const seq = doc.seq;
+		$docModal.find('.docText').hide();
+		$docModal.find('iframe').show();
+		$docModal.find('.docToggle').text('텍스트로 보기').prop('hidden', !doc.hasText);
+		const go = function () {
+			const $f = $docModal.find('iframe');
+			$f.attr('src', 'about:blank');
+			setTimeout(function () { if (seq === doc.seq) $f.attr('src', doc.pdfUrl + (page ? '#page=' + page : '')); }, 0);
+		};
+		if (doc.pdfUrl && Date.now() - doc.pdfAt < 9 * 60 * 1000) return go();
 		$.ajax({
 			url: '/api/archive/presign',
-			data: JSON.stringify(payload),
+			data: JSON.stringify({ path: doc.path }),
 			contentType: 'application/json',
 			dataType: 'text',
 			type: 'POST',
-			success: function(data) {
-				var obj = JSON.parse(data);
-				if (obj.status) {    
-					
-					$("#exampleModalFullscreen iframe").attr('src', obj.presignedUrl);
+			success: function (data) {
+				if (seq !== doc.seq) return;
+				const obj = JSON.parse(data);
+				if (obj.status) {
+					doc.pdfUrl = obj.presignedUrl;
+					doc.pdfAt = Date.now();
+					go();
 				} else {
-					alert(obj.msg);
+					alert(obj.msg || obj.message);
 				}
 			}
 		});
+	}
+
+	$docModal.on('shown.bs.modal', function (e) {
+		docEnsureMarkup();
+		const $t = $(e.relatedTarget);
+		const filePath = String($t.attr('data-path') || '');
+		$("#newFileLinkForDownloadPath").val(filePath);
+		$('h5#exampleModalFullscreenLabel').text($t.text());
+
+		doc.seq++;
+		$.extend(doc, { path: filePath, first: 0, last: 0, lastPage: 0, pdfUrl: '', pdfAt: 0, hasText: false, busy: false });
+		// 검색 결과 목록에서 연 경우만 검색어 표시 (앞의 '영상:' 같은 종류 접두어는 뺌)
+		doc.words = [];
+		if ($t.closest('.searchResultsListObjectsWrap').length && searchLastWord) {
+			doc.words = searchLastWord.normalize('NFC').replace(/^(영상|자막|장면|받아쓰기|사진|문서|PDF)\s*[:：]\s*/, '').split(/\s+/).filter(function (w) { return w.length >= 2; });
+		}
+		$docModal.find('.docPages').html('');
+		$docModal.find('.docPrev, .docNext, .docToggle').prop('hidden', true);
+		docShowText();
+
+		if (!/\.pdf$/i.test(filePath)) return docShowPdf();
+		docLoad({ q: doc.words.join(' ') }, 'replace', function (obj) {
+			const hit = obj.hitPage;
+			if (!hit || hit <= 1) return;
+			if (hit <= doc.last) return docScrollTo(hit);
+			docLoad({ start: Math.max(1, hit - 1) }, 'replace', function () { docScrollTo(hit); });   // 검색어가 처음 나오는 쪽으로
+		});
 	});
-	$('#exampleModalFullscreen').on('hidden.bs.modal', function (e) {
+	$docModal.on('hidden.bs.modal', function (e) {
+		doc.seq++;
 		$("#newFileLinkForDownloadPath").val('');
 		$('h5#exampleModalFullscreenLabel').text('');
-		$("#exampleModalFullscreen iframe").attr('src', ''); 
+		$docModal.find('iframe').attr('src', '');
+		$docModal.find('.docPages').html('');
+	});
+	$(document).on('click', '#exampleModalFullscreen .docToggle', function () {
+		if ($docModal.find('.docText').is(':visible')) docShowPdf(); else docShowText();
+	});
+	$(document).on('click', '#exampleModalFullscreen .docShowPdf', function () { docShowPdf(); });
+	$(document).on('click', '#exampleModalFullscreen .docPagePdf', function () { docShowPdf($(this).data('page')); });
+	$(document).on('click', '#exampleModalFullscreen .docNext', function () {
+		if (!doc.busy) docLoad({ start: doc.last + 1 }, 'append');
+	});
+	$(document).on('click', '#exampleModalFullscreen .docPrev', function () {
+		if (!doc.busy) docLoad({ start: Math.max(1, doc.first - DOC_CHUNK), end: doc.first }, 'prepend');
+	});
+	// 끝까지 내리면 다음 쪽을 이어서 불러옴
+	$docModal.find('.modal-body').on('scroll', function () {
+		if (doc.busy || !doc.hasText || doc.last >= doc.lastPage || !$docModal.find('.docText').is(':visible')) return;
+		if (this.scrollTop + this.clientHeight > this.scrollHeight - 600) docLoad({ start: doc.last + 1 }, 'append');
 	});
 	function getTheTitle(pathName) {
 		let results = pathName;

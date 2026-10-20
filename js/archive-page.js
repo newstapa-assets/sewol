@@ -632,6 +632,84 @@
 	let searchLastWord = "";          // 직전 검색어 (중복 요청 방지)
 	let isComposing   = false;        // 한글 IME 조합 중 여부
 	
+	/* ---------- 영상 공식 녹취 자막 검색 (서버가 ES_VIDEO_SEARCH=1 일 때만 결과를 줌) ---------- */
+	const VIDEO_SHOW = 10;
+	let videoHits = [];
+	function videoEnsureMarkup() {
+		if (!$('.searchResultsWrap .videoResults').length) $('.searchResultsWrap').prepend('<div class="col-12 videoResults mb-4" hidden></div>');
+		if (!$('#videoSubModal').length) {
+			$('body').append(
+				'<div class="modal fade" id="videoSubModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-xl modal-dialog-centered"><div class="modal-content">' +
+				'<div class="modal-header"><h5 class="modal-title h5"></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>' +
+				'<div class="modal-body p-0 bg-black"><video controls playsinline preload="metadata" style="width:100%;max-height:75vh;display:block"></video></div>' +
+				'<div class="modal-footer"><small class="text-muted me-auto videoSubNote"></small><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button></div>' +
+				'</div></div></div>');
+			$('#videoSubModal').on('hidden.bs.modal', function () { const v = $(this).find('video')[0]; v.pause(); v.removeAttribute('src'); v.load(); });
+		}
+	}
+	function videoTime(x) {
+		if (x.abs_time) return x.abs_time.slice(11, 19);
+		const t = Math.floor(x.start_s || 0);
+		return '영상 ' + Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0');
+	}
+	function videoSource(x) {
+		return docEsc(String(x.folder || '').replace(/^\d+_/, '').replace(/_/g, ' ')) + ' · ' + docEsc(x.title || '');
+	}
+	function renderVideoResults(obj, showAll) {
+		const $w = $('.searchResultsWrap .videoResults');
+		if (!obj.results.length) { $w.prop('hidden', true).html(''); return; }
+		const list = showAll ? obj.results : obj.results.slice(0, VIDEO_SHOW);
+		let h = '<h5 class="mb-2"><i class="bi-camera-video me-1"></i>영상 공식 녹취 자막 <span class="fileCount">(' + obj.total.toLocaleString('en-US') + (obj.truncated ? '+' : '') + ')</span></h5>' +
+			'<p class="small text-muted mb-2">119·122·관제(VTS)·무전 등 공식 녹취록 자막입니다. 실제 시각 순이며, 누르면 그 장면부터 재생합니다.</p><ul class="list-unstyled videoHitList">';
+		list.forEach(function (x, i) {
+			h += '<li class="videoHit' + (x.play ? ' pointer' : '') + '" data-i="' + i + '">' +
+				'<span class="videoHitTime">' + videoTime(x) + '</span>' +
+				'<span class="videoHitBody"><span class="videoHitSrc">' + videoSource(x) + (x.also.length ? ' <span class="text-muted">(같은 교신이 다른 영상 ' + x.also.length + '곳에도)</span>' : '') + '</span>' +
+				'<span class="videoHitText">' + x.snippet + '</span></span></li>';   // snippet 은 서버(ES)가 HTML 이스케이프 + <mark> 만 넣은 것
+		});
+		h += '</ul>';
+		if (!showAll && obj.results.length > VIDEO_SHOW) h += '<button type="button" class="btn btn-outline-secondary btn-sm videoMore">' + (obj.results.length - VIDEO_SHOW) + '건 더 보기</button>';
+		$w.html(h).prop('hidden', false);
+	}
+	let videoLast = null;
+	function runVideoSearch(searchWord, seq) {
+		videoEnsureMarkup();
+		$('.searchResultsWrap .videoResults').prop('hidden', true).html('');
+		$.ajax({
+			url: '/api/video/search',
+			type: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify({ search_word: searchWord }),
+			success: function (obj) {
+				if (seq !== searchSeq || !obj.status || !obj.enabled) return;
+				videoLast = obj;
+				videoHits = obj.results;
+				renderVideoResults(obj, false);
+			}
+		});
+	}
+	$(document).on('click', '.videoResults .videoMore', function () { if (videoLast) renderVideoResults(videoLast, true); });
+	$(document).on('click', '.videoResults .videoHit', function () {
+		const x = videoHits[$(this).data('i')];
+		if (!x || !x.play) return;
+		const $m = $('#videoSubModal');
+		$m.find('.modal-title').text(videoTime(x) + ' · ' + String(x.folder || '').replace(/^\d+_/, '').replace(/_/g, ' '));
+		$m.find('.videoSubNote').text('공식 녹취 자막 구간부터 재생합니다.');
+		$.ajax({
+			url: '/api/timeline/video-url',
+			type: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify(x.play),
+			success: function (obj) {
+				if (!obj.status) { alert(obj.msg || '영상을 열지 못했습니다.'); return; }
+				$m.find('video').attr('src', obj.presignedUrl + '#t=' + Math.max(0, Math.floor(x.start_s || 0)));
+				bootstrap.Modal.getOrCreateInstance($m[0]).show();
+			}
+		});
+	});
+
 	// 검색 결과 트리 노드 아래 파일 수 (하위 폴더 포함). 파일은 문자열, 폴더는 객체·배열
 	function countSearchFiles(node) {
 		if (typeof node === 'string') return 1;
@@ -683,6 +761,7 @@
 	}
 
 	function resetSearchView() {
+		$('.videoResults').prop('hidden', true).html('');
 		$('#searchResultsInJson').val('');
 		$('.searchResultsListObjectsWrap').html('');
 		$(".searchResultsWrap").hide();
@@ -698,6 +777,7 @@
 		if (searchXHR) { searchXHR.abort(); searchXHR = null; }
 	
 		const mySeq = ++searchSeq;
+		runVideoSearch(searchWord, mySeq);
 	
 		$('.searchResultsListObjectsWrap').html('');
 		$('#searchResultsInJson').val('');

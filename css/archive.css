@@ -67,6 +67,15 @@
 		#exampleModalFullscreen .docPage { padding: 1rem; border-radius: 0; border-left: 0; border-right: 0; }
 		#exampleModalFullscreen .docPageText { font-size: 1rem; line-height: 1.75; }
 	}
+	/* 영상 공식 녹취 자막 결과 */
+	.videoResults .videoHit { display: flex; gap: .75rem; padding: .5rem .25rem; border-bottom: 1px solid #eee; }
+	.videoResults .videoHit.pointer:hover { background: #fafafa; }
+	.videoResults .videoHitTime { flex: 0 0 5.5rem; font-variant-numeric: tabular-nums; color: #FF733C; font-weight: 600; }
+	.videoResults .videoHitBody { display: flex; flex-direction: column; min-width: 0; }
+	.videoResults .videoHitSrc { font-size: .8rem; color: #777; }
+	.videoResults .videoHitText { word-break: keep-all; overflow-wrap: anywhere; }
+	.videoResults .videoHitText mark { background: #ffe08a; padding: 0 .1em; }
+	@media (max-width: 575.98px) { .videoResults .videoHit { flex-direction: column; gap: .15rem; } .videoResults .videoHitTime { flex: none; } }
 	/* 검색 로딩 스피너 */
 	@keyframes nstpSpin {
 		from { transform: rotate(0deg); }

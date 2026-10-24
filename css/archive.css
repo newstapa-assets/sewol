@@ -67,6 +67,17 @@
 		#exampleModalFullscreen .docPage { padding: 1rem; border-radius: 0; border-left: 0; border-right: 0; }
 		#exampleModalFullscreen .docPageText { font-size: 1rem; line-height: 1.75; }
 	}
+	/* PDF 텍스트 보기 위 AI 요약 */
+	#exampleModalFullscreen .docSummary { background: #f4f7ff; border: 1px solid #d6e0ff; border-radius: .5rem; padding: .75rem 1rem; margin: 0 0 1rem; }
+	#exampleModalFullscreen .docSummary > summary { cursor: pointer; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; list-style: none; }
+	#exampleModalFullscreen .docSummary > summary::-webkit-details-marker { display: none; }
+	#exampleModalFullscreen .docSummaryBadge { background: #377dff; color: #fff; font-size: .75rem; font-weight: 600; border-radius: 1rem; padding: .15rem .6rem; }
+	#exampleModalFullscreen .docSummaryWho { font-size: .8rem; color: #667; }
+	#exampleModalFullscreen .docSummaryBody { margin-top: .6rem; font-size: 1rem; line-height: 1.75; word-break: keep-all; overflow-wrap: anywhere; color: #1e2022; }
+	#exampleModalFullscreen .docSummaryBody ul { padding-left: 1.2rem; margin: .4rem 0 0; }
+	#exampleModalFullscreen .docSummaryBody li { margin-bottom: .2rem; }
+	#exampleModalFullscreen .docSummaryMeta { font-size: .85rem; color: #555; margin-bottom: .3rem; }
+	#exampleModalFullscreen .docSummaryNote { font-size: .85rem; color: #b45309; margin: .5rem 0 0; }
 	/* 영상 공식 녹취 자막 결과 */
 	.videoResults .videoHit { display: flex; gap: .75rem; padding: .5rem .25rem; border-bottom: 1px solid #eee; }
 	.videoResults .videoHit.pointer:hover { background: #fafafa; }

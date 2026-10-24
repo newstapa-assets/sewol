@@ -398,6 +398,7 @@
 		$docModal.find('.modal-body').prepend(
 			'<div class="docText">' +
 				'<p class="docNotice"><i class="bi-info-circle me-1"></i>문서에서 자동으로 읽어 낸 글자라 원본과 다를 수 있습니다. 표·서명·도장 등은 <button type="button" class="btn btn-link p-0 align-baseline docShowPdf">원본 PDF</button>로 확인하세요.</p>' +
+				'<div class="docSummaryWrap"></div>' +
 				'<div class="text-center"><button type="button" class="btn btn-outline-secondary btn-sm docPrev" hidden>이전 쪽 보기</button></div>' +
 				'<div class="docPages"></div>' +
 				'<div class="text-center"><button type="button" class="btn btn-outline-secondary btn-sm docNext" hidden>다음 쪽 보기</button></div>' +
@@ -413,6 +414,20 @@
 		if (!doc.words.length) return html;
 		const re = new RegExp('(' + doc.words.map(function (w) { return docEsc(w).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')', 'g');
 		return html.replace(re, '<mark>$1</mark>');
+	}
+	// AI 요약 상자 (서버가 ES_PDF_SUMMARY=1 일 때만 summary 를 줌). Claude 가 쓴 글임을 늘 밝힌다
+	function docSummaryHtml(m) {
+		if (!m || !m.summary) return '';
+		const meta = [m.doctype && m.doctype.length ? m.doctype[m.doctype.length - 1] : '', m.date ? m.date.replace(/-/g, '. ') + '.' : ''].filter(Boolean).join(' · ');
+		let h = '<details class="docSummary" open><summary><span class="docSummaryBadge">AI 요약</span>' +
+			'<span class="docSummaryWho">Claude가 이 문서를 읽고 쓴 요약입니다. 원문과 다를 수 있습니다.</span></summary>' +
+			'<div class="docSummaryBody">';
+		if (meta) h += '<p class="docSummaryMeta">' + docEsc(meta) + '</p>';
+		h += '<p>' + docEsc(m.summary) + '</p>';
+		if (m.points && m.points.length) h += '<ul>' + m.points.map(function (t) { return '<li>' + docEsc(t) + '</li>'; }).join('') + '</ul>';
+		if (m.partial) h += '<p class="docSummaryNote"><i class="bi-exclamation-circle me-1"></i>문서가 길어 일부만 읽고 쓴 요약입니다.</p>';
+		if (m.quality === 'poor' || m.quality === 'partial') h += '<p class="docSummaryNote"><i class="bi-exclamation-circle me-1"></i>원문 글자가 ' + (m.quality === 'poor' ? '대부분' : '일부') + ' 깨져 있어 요약이 부정확할 수 있습니다.</p>';
+		return h + '</div></details>';
 	}
 	function docPageHtml(p) {
 		let h = '<section class="docPage" data-page="' + p.page + '">' +
@@ -455,6 +470,7 @@
 				const html = obj.pages.map(docPageHtml).join('');
 				const $pages = $docModal.find('.docPages');
 				const body = $docModal.find('.modal-body')[0];
+				if (obj.summary !== undefined && params.start == null) $docModal.find('.docSummaryWrap').html(docSummaryHtml(obj.summary));
 				if (place === 'append') {
 					$pages.append(html);
 				} else if (place === 'prepend') {
@@ -533,7 +549,7 @@
 		if ($t.closest('.searchResultsListObjectsWrap').length && searchLastWord) {
 			doc.words = searchLastWord.normalize('NFC').replace(/^(영상|자막|장면|받아쓰기|사진|문서|PDF)\s*[:：]\s*/, '').split(/\s+/).filter(function (w) { return w.length >= 2; });
 		}
-		$docModal.find('.docPages').html('');
+		$docModal.find('.docPages, .docSummaryWrap').html('');
 		$docModal.find('.docPrev, .docNext, .docToggle').prop('hidden', true);
 		docShowText();
 

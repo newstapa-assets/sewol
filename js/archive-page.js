@@ -398,6 +398,7 @@
 		$docModal.find('.modal-body').prepend(
 			'<div class="docText">' +
 				'<p class="docNotice"><i class="bi-info-circle me-1"></i>문서에서 자동으로 읽어 낸 글자라 원본과 다를 수 있습니다. 표·서명·도장 등은 <button type="button" class="btn btn-link p-0 align-baseline docShowPdf">원본 PDF</button>로 확인하세요.</p>' +
+				'<button type="button" class="btn btn-sm docGoSummary" hidden><i class="bi-arrow-up me-1"></i>AI 요약 보기</button>' +
 				'<div class="docSummaryWrap"></div>' +
 				'<div class="text-center"><button type="button" class="btn btn-outline-secondary btn-sm docPrev" hidden>이전 쪽 보기</button></div>' +
 				'<div class="docPages"></div>' +
@@ -429,6 +430,14 @@
 		if (m.quality === 'poor' || m.quality === 'partial') h += '<p class="docSummaryNote"><i class="bi-exclamation-circle me-1"></i>원문 글자가 ' + (m.quality === 'poor' ? '대부분' : '일부') + ' 깨져 있어 요약이 부정확할 수 있습니다.</p>';
 		return h + '</div></details>';
 	}
+	// 검색 결과에서 열어 검색어 쪽으로 내려간 경우, 위에 있는 AI 요약으로 돌아가는 버튼 (요약이 화면 밖일 때만)
+	function docSummaryButton() {
+		const sum = $docModal.find('.docSummary')[0];
+		const body = $docModal.find('.modal-body')[0];
+		const show = Boolean(sum && doc.words.length && $docModal.find('.docText').is(':visible') &&
+			sum.getBoundingClientRect().bottom < body.getBoundingClientRect().top + 8);
+		$docModal.find('.docGoSummary').prop('hidden', !show);
+	}
 	function docPageHtml(p) {
 		let h = '<section class="docPage" data-page="' + p.page + '">' +
 			'<div class="docPageHead"><span>' + p.page + ' / ' + doc.lastPage + '쪽</span>' +
@@ -445,6 +454,7 @@
 	function docScrollTo(page) {
 		const el = $docModal.find('.docPage[data-page="' + page + '"]')[0];
 		if (el) el.scrollIntoView({ block: 'start' });
+		docSummaryButton();
 	}
 	// place: 'replace' | 'append' | 'prepend'
 	function docLoad(params, place, then) {
@@ -550,7 +560,7 @@
 			doc.words = searchLastWord.normalize('NFC').replace(/^(영상|자막|장면|받아쓰기|사진|문서|PDF)\s*[:：]\s*/, '').split(/\s+/).filter(function (w) { return w.length >= 2; });
 		}
 		$docModal.find('.docPages, .docSummaryWrap').html('');
-		$docModal.find('.docPrev, .docNext, .docToggle').prop('hidden', true);
+		$docModal.find('.docPrev, .docNext, .docToggle, .docGoSummary').prop('hidden', true);
 		docShowText();
 
 		if (!/\.pdf$/i.test(filePath)) return docShowPdf();
@@ -572,6 +582,12 @@
 		if ($docModal.find('.docText').is(':visible')) docShowPdf(); else docShowText();
 	});
 	$(document).on('click', '#exampleModalFullscreen .docShowPdf', function () { docShowPdf(); });
+	$(document).on('click', '#exampleModalFullscreen .docGoSummary', function () {
+		const sum = $docModal.find('.docSummary')[0];
+		const body = $docModal.find('.modal-body')[0];
+		if (sum) { sum.open = true; body.scrollTo({ top: body.scrollTop + sum.getBoundingClientRect().top - body.getBoundingClientRect().top - 12 }); }
+		$docModal.find('.docGoSummary').prop('hidden', true);
+	});
 	$(document).on('click', '#exampleModalFullscreen .docPagePdf', function () { docShowPdf($(this).data('page')); });
 	$(document).on('click', '#exampleModalFullscreen .docNext', function () {
 		if (!doc.busy) docLoad({ start: doc.last + 1 }, 'append');
@@ -581,6 +597,7 @@
 	});
 	// 끝까지 내리면 다음 쪽을 이어서 불러옴
 	$docModal.find('.modal-body').on('scroll', function () {
+		docSummaryButton();
 		if (doc.busy || !doc.hasText || doc.last >= doc.lastPage || !$docModal.find('.docText').is(':visible')) return;
 		if (this.scrollTop + this.clientHeight > this.scrollHeight - 600) docLoad({ start: doc.last + 1 }, 'append');
 	});

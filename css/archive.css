@@ -78,6 +78,8 @@
 	#exampleModalFullscreen .docSummaryBody li { margin-bottom: .2rem; }
 	#exampleModalFullscreen .docSummaryMeta { font-size: .85rem; color: #555; margin-bottom: .3rem; }
 	#exampleModalFullscreen .docSummaryNote { font-size: .85rem; color: #b45309; margin: .5rem 0 0; }
+	#exampleModalFullscreen .docGoSummary { position: sticky; top: .5rem; z-index: 5; display: block; margin: 0 auto .5rem; background: #377dff; color: #fff; border-radius: 1rem; padding: .3rem .9rem; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+	#exampleModalFullscreen .docGoSummary[hidden] { display: none; }
 	/* 영상 공식 녹취 자막 결과 */
 	.videoResults .videoHit { display: flex; gap: .75rem; padding: .5rem .25rem; border-bottom: 1px solid #eee; }
 	.videoResults .videoHit.pointer:hover { background: #fafafa; }

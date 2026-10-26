@@ -10,6 +10,8 @@
 .themeToggle .dropdown-item { display: flex; align-items: center; cursor: pointer; }
 .themeToggle .dropdown-item.active, .themeToggle .dropdown-item:active { background: rgba(255, 115, 60, .12); color: #FF733C; }
 #header .navbar-brand .swf-1_logo { color: #000; }
+/* 창(모달)이 열려 있을 때는 '위로 가기' 버튼을 숨긴다 (모달 아래쪽 버튼과 겹침) */
+body.modal-open .js-go-to, body.modal-open .go-to { display: none !important; }
 /* 휴대폰: 모드 버튼을 메뉴(햄버거) 버튼 바로 옆에 */
 .navbar-nav-wrap > .themeToggle + .navbar-toggler { margin-left: .25rem !important; }
 

@@ -1,0 +1,188 @@
+/* 화면 모드 (라이트 / 다크 / 시스템)
+   <html data-theme="dark"> 일 때만 적용된다. 값은 head.ejs 의 인라인 스크립트가 정한다.
+   기반 테마(Front, Bootstrap 5.1)는 다크 모드가 없어서, 사이트가 쓰는 클래스만 골라 덮는다.
+   모든 페이지 CSS(archive.css, qf.css, timeline.css 등) 뒤에 읽힌다. */
+
+/* ---------- 공통: 모드 선택 버튼 (두 모드 모두) ---------- */
+.themeToggle .themeToggleBtn { width: 2.25rem; height: 2.25rem; display: inline-flex; align-items: center; justify-content: center; font-size: 1.05rem; color: #1e2022; background: transparent; border: 0; }
+.themeToggle .themeToggleBtn:hover, .themeToggle .themeToggleBtn:focus { background: rgba(0, 0, 0, .06); }
+.themeToggle .dropdown-menu { min-width: 9.5rem; }
+.themeToggle .dropdown-item { display: flex; align-items: center; cursor: pointer; }
+.themeToggle .dropdown-item.active, .themeToggle .dropdown-item:active { background: rgba(255, 115, 60, .12); color: #FF733C; }
+#header .navbar-brand .swf-1_logo { color: #000; }
+/* 휴대폰: 모드 버튼을 메뉴(햄버거) 버튼 바로 옆에 */
+.navbar-nav-wrap > .themeToggle + .navbar-toggler { margin-left: .25rem !important; }
+
+/* ---------- 다크 모드 색 ---------- */
+html[data-theme="dark"] {
+	--sw-bg: #121417;
+	--sw-surface: #1b1e22;
+	--sw-surface-2: #23272c;
+	--sw-surface-3: #2c3137;
+	--sw-border: #353b42;
+	--sw-text: #e4e6ea;
+	--sw-text-strong: #f5f6f8;
+	--sw-muted: #9aa1aa;
+	--sw-link: #7aa8ff;
+	--sw-accent: #FF733C;
+	--bs-body-bg: var(--sw-bg);
+	--bs-body-color: var(--sw-text);
+	color-scheme: dark;
+	background-color: var(--sw-bg);
+}
+
+/* 바탕·글자 */
+html[data-theme="dark"] body { background-color: var(--sw-bg); color: var(--sw-text); }
+html[data-theme="dark"] h1, html[data-theme="dark"] h2, html[data-theme="dark"] h3,
+html[data-theme="dark"] h4, html[data-theme="dark"] h5, html[data-theme="dark"] h6,
+html[data-theme="dark"] .h1, html[data-theme="dark"] .h2, html[data-theme="dark"] .h3,
+html[data-theme="dark"] .h4, html[data-theme="dark"] .h5, html[data-theme="dark"] .h6,
+html[data-theme="dark"] strong, html[data-theme="dark"] b { color: var(--sw-text-strong); }
+html[data-theme="dark"] .text-dark, html[data-theme="dark"] .text-body,
+html[data-theme="dark"] .text-black, html[data-theme="dark"] .link-dark { color: var(--sw-text) !important; }
+html[data-theme="dark"] .text-muted, html[data-theme="dark"] .text-secondary { color: var(--sw-muted) !important; }
+html[data-theme="dark"] a:not(.btn):not(.nav-link):not(.dropdown-item):not(.navbar-brand) { color: var(--sw-link); }
+html[data-theme="dark"] hr { color: var(--sw-border); opacity: 1; }
+html[data-theme="dark"] .border, html[data-theme="dark"] .border-top, html[data-theme="dark"] .border-bottom,
+html[data-theme="dark"] .border-start, html[data-theme="dark"] .border-end { border-color: var(--sw-border) !important; }
+
+/* 배경 클래스 */
+html[data-theme="dark"] .bg-white { background-color: var(--sw-surface) !important; }
+html[data-theme="dark"] .bg-light, html[data-theme="dark"] .bg-soft-light { background-color: var(--sw-surface-2) !important; }
+
+/* 상단 메뉴 */
+html[data-theme="dark"] #header, html[data-theme="dark"] .navbar-light,
+html[data-theme="dark"] .navbar { background-color: var(--sw-bg) !important; }
+html[data-theme="dark"] .navbar-light .navbar-nav .nav-link,
+html[data-theme="dark"] .navbar .nav-link { color: var(--sw-text); }
+html[data-theme="dark"] .navbar-light .navbar-nav .nav-link:hover,
+html[data-theme="dark"] .navbar-light .navbar-nav .nav-link.active,
+html[data-theme="dark"] .navbar .nav-link.active { color: var(--sw-accent); }
+html[data-theme="dark"] .navbar-toggler { color: var(--sw-text); border-color: var(--sw-border); }
+html[data-theme="dark"] #header .navbar-brand .swf-1_logo,
+html[data-theme="dark"] .swf-1_logo { color: #fff !important; }
+html[data-theme="dark"] .themeToggle .themeToggleBtn { color: var(--sw-text); }
+html[data-theme="dark"] .themeToggle .themeToggleBtn:hover, html[data-theme="dark"] .themeToggle .themeToggleBtn:focus { background: rgba(255, 255, 255, .08); }
+@media (max-width: 991.98px) {
+	html[data-theme="dark"] .navbar-collapse { background-color: var(--sw-bg); }
+}
+
+/* 드롭다운 */
+html[data-theme="dark"] .dropdown-menu { background-color: var(--sw-surface-2); border-color: var(--sw-border); box-shadow: 0 .6rem 1.5rem rgba(0, 0, 0, .45); }
+html[data-theme="dark"] .dropdown-item { color: var(--sw-text); }
+html[data-theme="dark"] .dropdown-item:hover, html[data-theme="dark"] .dropdown-item:focus { background-color: var(--sw-surface-3); color: var(--sw-text-strong); }
+html[data-theme="dark"] .themeToggle .dropdown-item.active { background: rgba(255, 115, 60, .18); color: #ff9a70; }
+
+/* 모달 */
+html[data-theme="dark"] .modal-content { background-color: var(--sw-surface); color: var(--sw-text); border-color: var(--sw-border); }
+html[data-theme="dark"] .modal-header, html[data-theme="dark"] .modal-footer { border-color: var(--sw-border); }
+html[data-theme="dark"] .modal-title { color: var(--sw-text-strong); }
+html[data-theme="dark"] .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+html[data-theme="dark"] .modal-backdrop.show { opacity: .7; }
+
+/* 폼 */
+html[data-theme="dark"] .form-control, html[data-theme="dark"] .form-select {
+	background-color: var(--sw-surface-2); color: var(--sw-text); border-color: var(--sw-border);
+}
+html[data-theme="dark"] .form-control::placeholder { color: var(--sw-muted); }
+html[data-theme="dark"] .form-control:focus, html[data-theme="dark"] .form-select:focus { background-color: var(--sw-surface-2); color: var(--sw-text-strong); border-color: #5a8dee; }
+html[data-theme="dark"] .form-label, html[data-theme="dark"] .form-check-label { color: var(--sw-text); }
+html[data-theme="dark"] .form-check-input { background-color: var(--sw-surface-2); border-color: var(--sw-border); }
+html[data-theme="dark"] .input-group-text { background-color: var(--sw-surface-3); color: var(--sw-text); border-color: var(--sw-border); }
+
+/* 버튼 */
+html[data-theme="dark"] .btn-outline-secondary { color: var(--sw-text); border-color: var(--sw-border); }
+html[data-theme="dark"] .btn-outline-secondary:hover { background-color: var(--sw-surface-3); color: var(--sw-text-strong); }
+html[data-theme="dark"] .btn-secondary { background-color: var(--sw-surface-3); border-color: var(--sw-surface-3); color: var(--sw-text); }
+html[data-theme="dark"] .btn-ghost-secondary { color: var(--sw-text); }
+html[data-theme="dark"] .btn-link { color: var(--sw-link); }
+html[data-theme="dark"] .btn-white { background-color: var(--sw-surface-2); border-color: var(--sw-border); color: var(--sw-text); }
+
+/* 카드·목록·표·알림 */
+html[data-theme="dark"] .card { background-color: var(--sw-surface); border-color: var(--sw-border); color: var(--sw-text); box-shadow: none; }
+html[data-theme="dark"] .card-header, html[data-theme="dark"] .card-footer { background-color: var(--sw-surface-2); border-color: var(--sw-border); }
+html[data-theme="dark"] .list-group-item { background-color: var(--sw-surface); border-color: var(--sw-border); color: var(--sw-text); }
+html[data-theme="dark"] .table { color: var(--sw-text); border-color: var(--sw-border); --bs-table-bg: transparent; --bs-table-striped-bg: rgba(255, 255, 255, .03); }
+html[data-theme="dark"] .alert-soft-dark { background-color: var(--sw-surface-2) !important; color: var(--sw-text) !important; }
+html[data-theme="dark"] .alert-soft-dark .alert-heading, html[data-theme="dark"] .alert-soft-dark a { color: var(--sw-text-strong) !important; }
+html[data-theme="dark"] .alert-primary { background-color: rgba(55, 125, 255, .15); border-color: rgba(55, 125, 255, .35); color: var(--sw-text); }
+html[data-theme="dark"] .alert-info { background-color: rgba(9, 165, 190, .15); border-color: rgba(9, 165, 190, .35); color: var(--sw-text); }
+html[data-theme="dark"] .accordion-item, html[data-theme="dark"] .accordion-button { background-color: var(--sw-surface); color: var(--sw-text); border-color: var(--sw-border); }
+html[data-theme="dark"] .accordion-button:not(.collapsed) { background-color: var(--sw-surface-2); color: var(--sw-text-strong); }
+html[data-theme="dark"] .accordion-button::after { filter: invert(1); }
+
+/* 아래쪽 정보 */
+html[data-theme="dark"] footer { background-color: #0d0f12 !important; color: var(--sw-muted) !important; }
+html[data-theme="dark"] footer a { color: var(--sw-text) !important; }
+
+/* 위로 가기 */
+html[data-theme="dark"] .js-go-to.go-to { background-color: var(--sw-surface-3); color: var(--sw-text); }
+
+/* 그림 안 글자색이 검은 로고·아이콘 */
+html[data-theme="dark"] .swf-icons { color: var(--sw-text); }
+
+/* ---------- Front 테마 구성 요소 ---------- */
+html[data-theme="dark"] .navbar-brand-wrapper { background-color: var(--sw-bg) !important; }
+html[data-theme="dark"] .input-card { background-color: var(--sw-surface) !important; box-shadow: none !important; }
+html[data-theme="dark"] .navbar-vertical .nav-link, html[data-theme="dark"] .navbar-sidebar .nav-link { color: var(--sw-text); }
+html[data-theme="dark"] .navbar-vertical .nav-link:hover, html[data-theme="dark"] .navbar-vertical .nav-link.active { color: var(--sw-accent); }
+html[data-theme="dark"] .nav-subtitle { color: var(--sw-muted); }
+
+/* ---------- 데이터 아카이브 ---------- */
+html[data-theme="dark"] details.searchResultsfileList summary, html[data-theme="dark"] .searchResultsfileList li,
+html[data-theme="dark"] .ListObjectsWrap li, html[data-theme="dark"] .searchResultsListObjectsWrap li { color: var(--sw-text); }
+html[data-theme="dark"] .breadcrumb-item, html[data-theme="dark"] .breadcrumb-item + .breadcrumb-item::before { color: var(--sw-muted); }
+html[data-theme="dark"] .breadcrumb .breadcrumb-item.active { color: var(--sw-link); }
+html[data-theme="dark"] #staticBackdrop .modal-content { box-shadow: 0 0 13px -3px #000; }
+
+/* 문서 모달 (텍스트 보기) */
+html[data-theme="dark"] #exampleModalFullscreen .modal-body { background: var(--sw-bg); }
+html[data-theme="dark"] #exampleModalFullscreen .docNotice { background: rgba(255, 115, 60, .1); border-color: rgba(255, 115, 60, .3); color: var(--sw-text); }
+html[data-theme="dark"] #exampleModalFullscreen .docPage { background: var(--sw-surface); border-color: var(--sw-border); box-shadow: none; }
+html[data-theme="dark"] #exampleModalFullscreen .docPageHead { color: var(--sw-muted); border-color: var(--sw-border); }
+html[data-theme="dark"] #exampleModalFullscreen .docPageText { color: var(--sw-text); }
+html[data-theme="dark"] #exampleModalFullscreen .docPageText mark,
+html[data-theme="dark"] .videoResults .videoHitText mark { background: #7a5d00; color: #fff3c4; }
+html[data-theme="dark"] #exampleModalFullscreen .docSummary { background: rgba(55, 125, 255, .1); border-color: rgba(55, 125, 255, .35); }
+html[data-theme="dark"] #exampleModalFullscreen .docSummaryWho, html[data-theme="dark"] #exampleModalFullscreen .docSummaryMeta { color: var(--sw-muted); }
+html[data-theme="dark"] #exampleModalFullscreen .docSummaryBody { color: var(--sw-text); }
+html[data-theme="dark"] #exampleModalFullscreen .docSummaryNote { color: #f0a35c; }
+
+/* 영상 공식 녹취 자막 */
+html[data-theme="dark"] .videoResults .videoHit { border-color: var(--sw-border); }
+html[data-theme="dark"] .videoResults .videoHit.pointer:hover { background: var(--sw-surface-2); }
+html[data-theme="dark"] .videoResults .videoHitSrc { color: var(--sw-muted); }
+
+/* ---------- 의문과 팩트 ---------- */
+/* 본문은 DB 에 저장된 HTML 이라 글자색·배경이 인라인으로 박혀 있는 경우가 많다 */
+html[data-theme="dark"] .accordion-body-wrap,
+html[data-theme="dark"] .accordion-body-wrap *:not(a):not(mark) { color: var(--sw-text) !important; }
+html[data-theme="dark"] .accordion-body-wrap a { color: var(--sw-link) !important; }
+html[data-theme="dark"] .accordion-body-wrap [style*="background"] { background-color: transparent !important; }
+html[data-theme="dark"] .accordion-body-wrap .journal-caption-wrap { color: var(--sw-muted) !important; }
+html[data-theme="dark"] .accordion-body-wrap table, html[data-theme="dark"] .accordion-body-wrap td, html[data-theme="dark"] .accordion-body-wrap th { border-color: var(--sw-border) !important; }
+html[data-theme="dark"] .accordion-body-wrap img { box-shadow: none; border-color: var(--sw-border); }
+html[data-theme="dark"] .accordion-item.shadow { box-shadow: none !important; border: 1px solid var(--sw-border) !important; }
+/* 팩트체크 요청 창의 개인정보 동의 글 상자 */
+html[data-theme="dark"] pre[class*=language-], html[data-theme="dark"] :not(pre) > code[class*=language-] { background: var(--sw-surface-2) !important; }
+html[data-theme="dark"] code[class*=language-], html[data-theme="dark"] pre[class*=language-] { color: var(--sw-text) !important; }
+
+/* ---------- 시청각 타임라인 ---------- */
+html[data-theme="dark"] .jqtl-container { background-color: var(--sw-surface) !important; border-color: var(--sw-border) !important; }
+html[data-theme="dark"] .jqtl-loader { background-color: var(--sw-surface) !important; }
+html[data-theme="dark"] .jqtl-side-index > [class^="jqtl-side-index-"] { background-color: var(--sw-surface) !important; border-color: var(--sw-border) !important; color: var(--sw-text); }
+html[data-theme="dark"] .jqtl-side-index .jqtl-side-index-item:nth-child(odd) { background-color: var(--sw-surface-2) !important; }
+html[data-theme="dark"] .jqtl-side-index .jqtl-side-index-item:first-child,
+html[data-theme="dark"] .jqtl-side-index .jqtl-side-index-margin { border-color: var(--sw-border) !important; }
+html[data-theme="dark"] .jqtl-ruler-line-item { color: var(--sw-muted); }
+html[data-theme="dark"] .jqtl-ruler-line-rows:nth-child(even), html[data-theme="dark"] .jqtl-ruler-line-item:nth-child(even) { background-color: rgba(255, 255, 255, .02); }
+html[data-theme="dark"] .jqtl-overlay { background-color: rgba(18, 20, 23, .55) !important; }
+html[data-theme="dark"] .jqtl-overlay:nth-child(odd) { background-color: rgba(35, 39, 44, .45) !important; }
+html[data-theme="dark"] .jqtl-event-node { background-color: #5b636c; }
+html[data-theme="dark"] .jqtl-event-node::before { color: #c3c8ce; }
+html[data-theme="dark"] .jqtl-timeline-title { color: var(--sw-text-strong); }
+html[data-theme="dark"] .jqtl-range-meta, html[data-theme="dark"] .jqtl-event-title > .event-content { color: var(--sw-muted); }
+html[data-theme="dark"] .noUi-target { background: var(--sw-surface-3); border-color: var(--sw-border); box-shadow: none; }
+html[data-theme="dark"] .noUi-handle { background: #d9dde2; border-color: var(--sw-border); box-shadow: none; }
+/* 사건 막대는 색이 인라인(#ccc 등)이라 밝기만 낮춘다 */
+html[data-theme="dark"] .jqtl-event-node:not(.active):not(:hover) { filter: brightness(.62); }

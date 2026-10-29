@@ -6126,7 +6126,7 @@
 				value: (d = g(regeneratorRuntime.mark((function t() {
 					var e, n, r, i, o, a, c, s, u, l = this,
 						h = arguments;
-					var _eId = "";
+					var _added = []; // ruizyi: 한 번에 여러 개를 받아도 모두 이슈 표시
 					return regeneratorRuntime.wrap((function(t) {
 						for (;;) switch (t.prev = t.next) {
 							case 0:
@@ -6142,7 +6142,7 @@
 										if (!l.is_empty(t.eventId) && a.includes(t.eventId)) return l._error("An event with the same eventID: ".concat(t.eventId, " already exists."), "warn"), !1;
 										var e = l._registerEventData("<div></div>", t);
 										l.is_empty(e) || (0 == e.eventId ? (e.eventId = Math.max(c + 1, parseInt(e.eventId, 10)), o.push(e), c = parseInt(e.eventId, 10)) : (o.push(e), c = c < e.eventId ? e.eventId : c), s[e.eventId] = e, a.push(e.eventId), u = !0);
-										_eId = e.eventId;
+										l.is_empty(e) || _added.push([e.eventId, t.content]);
 									})), u) {
 									t.next = 8;
 									
@@ -6155,13 +6155,13 @@
 								r && (this._debug("Fired your callback function after replacing events."), i ? r(this._element, this._config, i, s) : r(this._element, this._config, s));
 							case 14:
 							case "end":
-								if (typeof _eId != 'undefined' && _eId != "") { 
-									
-									// console.log("e", e[0][0]["content"]);
-									let tempTitle = e[0][0]["content"]["datetime"].split(" ")[1];
-									tempTitle += '\n';
-									tempTitle += e[0][0]["content"]["content"];
-									$("#evt-"+_eId).addClass("TheIssueEventWrap").attr('data-toggle', 'tooltip').attr('title', tempTitle);
+								if (_added.length > 0) { 
+									_added.forEach(function (a) {
+										let tempTitle = a[1]["datetime"].split(" ")[1];
+										tempTitle += '\n';
+										tempTitle += a[1]["content"];
+										$("#evt-"+a[0]).addClass("TheIssueEventWrap").attr('data-toggle', 'tooltip').attr('title', tempTitle);
+									});
 									$('[data-toggle="tooltip"]').tooltip(); 
 									
 								}

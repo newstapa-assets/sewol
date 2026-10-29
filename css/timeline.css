@@ -576,25 +576,25 @@
 		z-index: 5;
 	  }
 	}	
-	#speedCharWrap, .js-plotly-plot .plotly .main-svg {
+	#speedCharWrap {
 		background-color: transparent !important;
+		height: 150px;
 	}
-	#speedCharWrap .modebar {
-		display: none;
+	#speedCharWrap .speedGauge {
+		display: block;
+		margin: 0 auto;
 	}
-	#speedCharWrap text.number:after {
-		content: 'km';
+	#speedCharWrap .speedTick {
+		font-family: 'Roboto Mono', monospace;
+		font-size: 12px;
+		fill: rgb(28, 65, 117);
+		stroke: none;
 	}
-	#speedCharWrap text.number {
-		font-size: 50px !important;
+	#speedCharWrap .speedNumber {
+		font-family: 'Roboto Mono', monospace;
+		font-size: 19px;
 		font-weight: 900;
-		fill: #FF733C !important;
-	}
-	#speedCharWrap g.trace g.numbers {
-		
-	}
-	#speedCharWrap g.trace g.numbers:after {
-		content: 'km';
+		fill: #FF733C;
 	}
 	#currentLatitudeDMS, #currentLongitudeDMS {
 		font-family: 'Roboto Mono', monospace;

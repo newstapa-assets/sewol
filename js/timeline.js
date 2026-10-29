@@ -20,7 +20,6 @@ var SEWOL_ASSET_BASE = window.SEWOL_ASSET_BASE || "";
 	var start = new Date(2014, 3, timelineTimes[globalCurrentStage]["start"]["DD"], timelineTimes[globalCurrentStage]["start"]["HH"], timelineTimes[globalCurrentStage]["start"]["MM"], 0, 0);
 	var end = new Date(2014, 3, timelineTimes[globalCurrentStage]["end"]["DD"], timelineTimes[globalCurrentStage]["end"]["HH"], timelineTimes[globalCurrentStage]["end"]["MM"], 0, 0); 
 	var globalShowedManual = false, globalLoadedDone = false, globalPlayers0JustStarted = true, globalPlayers0Volume = 0, globalPlayers1Volume = 0, globalDoNotPlayLottie = false, globalSlideStatus = false, globalCurrentSeries = 3, globalCurrentVideoStartTime = "", globalCurrentVideo2Id = "", globalStandardTimeOfTimeline = 0, CURRENTDATEINOFFICIALLY = start, globalBeginOfTimeline = 0, globalEndOfTimeline = 0, globalEventDataSection = [], globalCurrentStatus = "NEW", globalCurrentLottiePath = "", globalCurrentRemainingPlayTime = 0, globalVideoDuration = 0, globalCurrentPlayPercent = 0, globalCurrentPlayTime = 0, globalCurrentTimestamp = 0, globalCurrentDateTime = 0, globalCurrentTime = 0, globalCurrentTime2 = 0, globalCurrentProvider = "", reloadmmArray = ["0000", "1000", "2000", "3000", , "4000", , "5000"];
-	const PlotlyLayout = { width: 280, height: 150, margin: { t: 0, b: 0 }, font: { color: "rgb(28 65 117)", family: "Roboto Mono" } };
 
 	
 	const sewolfPlayer = document.querySelector("#SWFvectorPlayerHandler"); 
@@ -115,29 +114,38 @@ var SEWOL_ASSET_BASE = window.SEWOL_ASSET_BASE || "";
 	});  
 	 
 	
-	var data = [
-	  {
-		domain: { x: [0, 1], y: [0, 1] },
-		value: 0,
-		type: "indicator",
-		mode: "gauge+number",
-		gauge: {
-		  bar: { color: "rgb(28 65 117)" },
-		  axis: { range: [null, 50] },
-		  steps: [
-			  { range: [0, 30], color: "lightgray" },
-			  { range: [30, 50], color: "#bdbdbd" }
-		  ],
-		  threshold: {
-			line: { color: "red", width: 2 },
-			thickness: 0.75,
-			value: 32.15551295492
-		  }
+	// 속도계 (km/h, 0~50). 예전 Plotly 게이지와 같은 모양을 SVG 로 그린다
+	const SPEED_MAX = 50, SPEED_LIMIT = 32.15551295492;
+	function gaugePoint(r, v) {
+		const a = Math.PI * (1 - Math.min(Math.max(v, 0), SPEED_MAX) / SPEED_MAX);
+		return (r * Math.cos(a)).toFixed(2) + ',' + (-r * Math.sin(a)).toFixed(2);
+	}
+	function gaugeArc(r1, r2, v1, v2) {
+		return 'M' + gaugePoint(r2, v1) + 'A' + r2 + ',' + r2 + ' 0 0,1 ' + gaugePoint(r2, v2) +
+			'L' + gaugePoint(r1, v2) + 'A' + r1 + ',' + r1 + ' 0 0,0 ' + gaugePoint(r1, v1) + 'Z';
+	}
+	function drawSpeedGauge(value) {
+		const wrap = document.getElementById('speedCharWrap');
+		if (!wrap.firstChild) {
+			let ticks = '';
+			[0, 20, 40].forEach(function (t) {
+				const a = Math.PI * (1 - t / SPEED_MAX), c = Math.cos(a), sn = Math.sin(a);
+				ticks += '<line x1="' + (60 * c).toFixed(2) + '" y1="' + (-60 * sn).toFixed(2) + '" x2="' + (65 * c).toFixed(2) + '" y2="' + (-65 * sn).toFixed(2) + '"/>' +
+					'<text class="speedTick" x="' + (72 * c).toFixed(2) + '" y="' + (-72 * sn + 4).toFixed(2) + '" text-anchor="' + (t < 25 ? 'end' : 'start') + '">' + t + '</text>';
+			});
+			wrap.innerHTML = '<svg class="speedGauge" width="280" height="150" viewBox="0 0 280 150"><g transform="translate(140,105)">' +
+				'<path fill="#d3d3d3" d="' + gaugeArc(45, 60, 0, 30) + '"/>' +
+				'<path fill="#bdbdbd" d="' + gaugeArc(45, 60, 30, SPEED_MAX) + '"/>' +
+				'<path class="speedBar" fill="rgb(28,65,117)" d=""/>' +
+				'<line stroke="red" stroke-width="2" x1="' + gaugePoint(46.875, SPEED_LIMIT).replace(',', '" y1="') + '" x2="' + gaugePoint(58.125, SPEED_LIMIT).replace(',', '" y2="') + '"/>' +
+				'<path fill="none" stroke="#444" d="' + gaugeArc(45, 60, 0, SPEED_MAX) + '"/>' +
+				'<g stroke="#444">' + ticks + '</g>' +
+				'<text class="speedNumber" x="0" y="-8" text-anchor="middle"></text></g></svg>';
 		}
-	  }
-	]; 
-	Plotly.newPlot('speedCharWrap', data, PlotlyLayout);
-	$("#speedCharWrap text.number").text($("#speedCharWrap text.number").text()+"km");
+		wrap.querySelector('.speedBar').setAttribute('d', value > 0 ? gaugeArc(48.75, 56.25, 0, value) : '');
+		wrap.querySelector('.speedNumber').textContent = (value ? value.toFixed(2) : '0') + 'km';
+	}
+	drawSpeedGauge(0);
 	
 	function calculateHeight(){  
 		animationWrapWidth = $('.animationWrap').width();
@@ -287,7 +295,7 @@ var SEWOL_ASSET_BASE = window.SEWOL_ASSET_BASE || "";
 			}
 		}
 	}
-	window.onload = function() {
+	function initTimelinePage() {
 		calculateHeight();
 		InitializationTimeline();
 		asyncCallReloadEventDatas();
@@ -327,20 +335,40 @@ var SEWOL_ASSET_BASE = window.SEWOL_ASSET_BASE || "";
 			asyncCallReloadEventDatas();
 		});
 		
+		if (globalCurrentStage == "troisieme") showPart3Notice();
 		setTimeout(function(){ 
-			if (globalCurrentStage == "troisieme") {
-				$("#loading-wrapper.part3Notice").show();	
-				setTimeout(function(){ 
-					$("#loading-wrapper.part3Notice").fadeToggle(500);
-					globalLoadedDone = true;
-				}, 6000); 
-			}
-		}, 400); 
-		setTimeout(function(){ 
-			$("#loading-wrapper").fadeToggle(500);
+			$("#loading-wrapper:not(.part3Notice)").fadeOut(500);
 		}, 500);  
 		showManual();
+		// 첫 화면 배경 영상은 타임라인을 다 그린 뒤에 받는다
+		document.querySelectorAll('video[data-src]').forEach(function (v) {
+			v.src = v.dataset.src;
+			v.removeAttribute('data-src');
+			v.play().catch(function () {});
+		});
 	}  
+	// 지원 기관 안내: 같은 방문(탭) 중 처음 한 번만 6초, 누르면 바로 닫힘
+	function showPart3Notice() {
+		let seen = false;
+		try { seen = sessionStorage.getItem('sewol-part3-notice') === '1'; } catch (e) {}
+		if (seen) {
+			globalLoadedDone = true;
+			return;
+		}
+		try { sessionStorage.setItem('sewol-part3-notice', '1'); } catch (e) {}
+		const notice = $("#loading-wrapper.part3Notice");
+		let timer = 0;
+		function close() {
+			clearTimeout(timer);
+			notice.off('click', close).fadeOut(500);
+			globalLoadedDone = true;
+			showManual();
+		}
+		notice.css('cursor', 'pointer').on('click', close).show();
+		timer = setTimeout(close, 6000);
+	}
+	if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initTimelinePage);
+	else initTimelinePage();
 	
 	function slideUpdate_(currentTtimeStamp) { 
 		const positionDateTimeTimestamp = parseInt(currentTtimeStamp);
@@ -363,29 +391,7 @@ var SEWOL_ASSET_BASE = window.SEWOL_ASSET_BASE || "";
 			document.getElementById("currentLongitudeDMS").innerText = locationData[0][simpleDateTime]["lonDMS"];
 			
 			const _value = locationData[0][simpleDateTime]["SOG"]*1.852;
-			var data = [
-			  {
-				domain: { x: [0, 1], y: [0, 1] },
-				value: _value,
-				type: "indicator",
-				mode: "gauge+number",
-				gauge: {
-				  bar: { color: "rgb(28 65 117)" },
-				  axis: { range: [null, 50] },
-				  steps: [
-					{ range: [0, 30], color: "lightgray" },
-					{ range: [30, 50], color: "#bdbdbd" }
-				  ],
-				  threshold: {
-					line: { color: "red", width: 2 },
-					thickness: 0.75,
-					value: 32.15551295492
-				  }
-				}
-			  }
-			]; 
-			Plotly.newPlot('speedCharWrap', data, PlotlyLayout);
-			$("#speedCharWrap text.number").text(_value.toFixed(2)+"km");
+			drawSpeedGauge(_value);
 			
 		}   
 		
@@ -575,20 +581,21 @@ var SEWOL_ASSET_BASE = window.SEWOL_ASSET_BASE || "";
 		
 		setTimeout(() => {  
 			
-			let i=0;
+			// 이슈는 한 번에 넣는다 (하나씩 넣으면 넣을 때마다 막대 전체를 다시 그림)
+			const issues = [];
 			$.each(issuesOnEventPosition, function( key, row ) {
-				
 				if (startRange < key && endRange > key) { 
-					$('#myTimeline').Timeline('ruizyiAddEvent', [{
+					issues.push({
 						id: key,
 						start: row.datetime,
 						end: moment(row.datetime).add(1, 'minutes').format('YYYY-MM-DD HH:mm:ss'),
 						row: 0,
 						label: '',
 						content: row
-					}]);
+					});
 				}
-			i++;});
+			});
+			if (issues.length) $('#myTimeline').Timeline('ruizyiAddEvent', issues);
 			
 		}, 0);  
 	}

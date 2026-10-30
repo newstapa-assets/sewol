@@ -222,18 +222,6 @@ body, .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6, span, p, ul, li {
 	}
 }
 
-div.code-toolbar>.toolbar {
-	position: absolute;
-	top: 0.5625rem;
-	right: .75rem;
-	font-size: 13px;
-	transition: opacity .3s ease-in-out;
-}
-
-code[class*=language-], pre[class*=language-] {
-	
-}
-
 .timeline-header-title {
 	padding: 20px;
 }
@@ -407,7 +395,7 @@ z-index: 9999;
 	font-size: 30px;
 	color: #FF733C;
 }
-.navbar.navbar-vertical .nav-tabs-borderless.nav-vertical .nav-item.show .nav-link, .navbar.navbar-vertical .nav-tabs-borderless.nav-vertical .nav-link.active {
+.navbar.sw-sidebar .sw-sidebar-nav.sw-sidebar-nav .nav-item.show .nav-link, .navbar.sw-sidebar .sw-sidebar-nav.sw-sidebar-nav .nav-link.active {
 	border-color: #FF733C;
 }
 

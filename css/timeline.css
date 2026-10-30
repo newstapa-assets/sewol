@@ -675,3 +675,67 @@
 	.main_timeline_wrap_troisieme {
 		margin-bottom: 1rem;
 	}
+
+/* '시청각 타임라인은' 창의 넓은 카드 여백 */
+.sw-card-lg > .card-header {
+	padding-right: 2.75rem;
+	padding-left: 2.75rem;
+}
+.sw-card-lg > .card-body {
+	padding: 2.75rem;
+}
+/* Summary 창의 단계 목록: 왼쪽 원 아이콘과 이어지는 세로선 */
+.sw-step {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: -.75rem;
+	margin-left: -.75rem;
+	padding-left: 0;
+	list-style: none;
+}
+.sw-step .sw-step-item {
+	display: flex;
+	flex: 0 0 100%;
+	flex-direction: column;
+	max-width: 100%;
+	margin-bottom: 2.25rem;
+	padding-right: .75rem;
+	padding-left: .75rem;
+}
+.sw-step .sw-step-content-wrapper {
+	position: relative;
+	display: flex;
+	width: 100%;
+}
+.sw-step .sw-step-icon {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	width: 3.125rem;
+	height: 3.125rem;
+	margin-right: 1rem;
+	border-radius: 50%;
+	font-weight: 600;
+}
+.sw-step .sw-step-icon::after {
+	content: "";
+	position: absolute;
+	top: 3.875rem;
+	left: 1.5625rem;
+	height: calc(100% - 2.375rem);
+	border-left: .125rem solid rgba(33, 50, 91, .1);
+}
+.sw-step-icon-soft-dark {
+	color: #21325b;
+	background-color: rgba(33, 50, 91, .1);
+}
+.sw-step .sw-step-content {
+	flex: 1;
+}
+.sw-step-title {
+	display: block;
+	color: #1e2022;
+	font-weight: 600;
+}

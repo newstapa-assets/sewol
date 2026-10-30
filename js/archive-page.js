@@ -42,16 +42,16 @@
 			var tempDate = "";
 			var tempContent = ""; 
 			if(typeof value.children == 'undefined') {
-				if (tempTitleDate_ != "") tempContent += '<li class="nav-item"><span class="nav-subtitle">'+tempTitleDate_+'</span></li>';
+				if (tempTitleDate_ != "") tempContent += '<li class="nav-item"><span class="sw-nav-subtitle">'+tempTitleDate_+'</span></li>';
 				tempContent += '<li class="nav-item"><a class="nav-link IamParent archiveDatasTrigger" data-id="'+value.id+'" href="javascript:;">'+tempTitle_+'</a></li>'
-				tempStandardListWrap += '<div class="col mb-4"><div class="card card-bordered card-transition shadow-none border-0"><a class="card-body" href="javascript:;"><h5 class="card-title mb-0"></h5></a></div></div>';
+				tempStandardListWrap += '<div class="col mb-4"><div class="card sw-card-bordered sw-card-transition shadow-none border-0"><a class="card-body" href="javascript:;"><h5 class="card-title mb-0"></h5></a></div></div>';
 			} else {
-				if (tempTitleDate_ != "") tempContent += '<li class="nav-item"><span class="nav-subtitle">'+tempTitleDate_+'</span></li>';
+				if (tempTitleDate_ != "") tempContent += '<li class="nav-item"><span class="sw-nav-subtitle">'+tempTitleDate_+'</span></li>';
 				tempContent += '<li class="nav-item "><a class="nav-link dropdown-toggle menuParentWrap IamParent archiveDatasTrigger" href="#snippetsSidebarNavFeaturesCollapse'+value.id+'" data-id="'+value.id+'" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="snippetsSidebarNavFeaturesCollapse'+value.id+'">'+tempTitle_+'</a>';
-				tempContent += '<div id="snippetsSidebarNavFeaturesCollapse'+value.id+'" class="nav-collapse collapse ">';
+				tempContent += '<div id="snippetsSidebarNavFeaturesCollapse'+value.id+'" class="sw-nav-collapse collapse ">';
 				$.each(value.children, function( index2, value2 ) {
 					tempContent += '<a class="nav-link archiveDatasTrigger subMenu IamChild archiveDatasTrigger" data-id="'+value2.id+'" data-parentid="'+value.id+'" href="javascript:;"><span>'+value2.title+'</span></a>';
-					tempStandardListWrap += '<div class="col mb-4"><div class="card card-bordered card-transition shadow-none"><a class="card-body IamChild archiveDatasTrigger" data-id="'+value2.id+'" data-parentid="'+value.id+'" href="javascript:;"><h5 class="card-title mb-0">'+value2.title+'</h5></a></div></div>';
+					tempStandardListWrap += '<div class="col mb-4"><div class="card sw-card-bordered sw-card-transition shadow-none"><a class="card-body IamChild archiveDatasTrigger" data-id="'+value2.id+'" data-parentid="'+value.id+'" href="javascript:;"><h5 class="card-title mb-0">'+value2.title+'</h5></a></div></div>';
 				});
 				tempContent += '</div>';
 			}
@@ -232,7 +232,7 @@
 						$("strong.fileTitle").text(parentTitle);
 						$('#subWrap .subTitleWrap b').text(parentTitle);
 						if(typeof value.children == 'undefined') {
-							fileListWrap += '<summary><i class="bi-folder text-body me-1"></i><strong> '+parentTitle+'</strong></summary><ul class="list-py-1 list-unstyled ps-4"><li class="getFileDataTrigger" data-call="1a" data-path="'+value.path+'" data-fullpath="'+value.path+'" data-id="'+value.id+'" data-depth="2"><i class="bi-folder me-1"></i>'+parentTitle+'<span class="fileCount" id="'+value.id+'"></span></li></ul>';
+							fileListWrap += '<summary><i class="bi-folder text-body me-1"></i><strong> '+parentTitle+'</strong></summary><ul class="sw-list-py-1 list-unstyled ps-4"><li class="getFileDataTrigger" data-call="1a" data-path="'+value.path+'" data-fullpath="'+value.path+'" data-id="'+value.id+'" data-depth="2"><i class="bi-folder me-1"></i>'+parentTitle+'<span class="fileCount" id="'+value.id+'"></span></li></ul>';
 						} else {
 							fileListWrap += '<summary data-call="1b" data-path="'+value.path+'" data-fullpath="'+value.path+'" data-id="'+value.id+'"><i class="bi-folder text-body me-1"></i><strong>'+parentTitle+'<span class="fileCount" id="'+value.id+'"></span></strong></summary>';
 						}
@@ -241,7 +241,7 @@
 						$('#subWrap .descDateWrap').html(nl2br(value.content));
 						
 						
-						fileListWrap += '<ul class="list-py-1 list-unstyled ps-4">';
+						fileListWrap += '<ul class="sw-list-py-1 list-unstyled ps-4">';
 						
 						$.each(value.children, function( index2, value2 ) {
 							
@@ -755,15 +755,15 @@
 		fileListWrap += '<summary data-path="" data-id=""></summary>';
 		$.each(obj.results, function(key, row) {
 			fileListWrap += '<summary data-path="'+key+'" data-depth="1"><i class="bi-folder text-body me-1"></i><strong> '+getTheTitle(key)+searchFileCount(row)+'</strong></summary>';
-			fileListWrap += '<ul class="list-py-1 list-unstyled ps-4">';
+			fileListWrap += '<ul class="sw-list-py-1 list-unstyled ps-4">';
 			$.each(row, function( key2, row2 ) {
 				if (typeof row2 === 'string') return;   // 기관 폴더 바로 아래 파일: 이 트리는 폴더만 그림
 				fileListWrap += '<li class="getSearchFileDataTrigger" data-path1="'+key+'" data-path2="'+key2+'" data-depth="2"><i class="bi-folder me-1"></i> '+getTheTitle(key2)+searchFileCount(row2)+'</li>';
-				fileListWrap += '<ul class="list-py-1 list-unstyled ps-4">';
+				fileListWrap += '<ul class="sw-list-py-1 list-unstyled ps-4">';
 				$.each(row2, function( key3, row3 ) {
 					if (isNaN(key3)) {
 						fileListWrap += '<li class="getSearchFileDataTrigger" data-path1="'+key+'" data-path2="'+key2+'" data-path3="'+key3+'" data-depth="3"><i class="bi-folder me-1"></i> '+getTheTitle(key3)+searchFileCount(row3)+'</li>';
-						fileListWrap += '<ul class="list-py-1 list-unstyled ps-4">';
+						fileListWrap += '<ul class="sw-list-py-1 list-unstyled ps-4">';
 						$.each(row3, function( key4, row4 ) {
 							if (isNaN(key4)) fileListWrap += '<li class="getSearchFileDataTrigger" data-path1="'+key+'" data-path2="'+key2+'" data-path3="'+key3+'" data-path4="'+key4+'" data-depth="4"><i class="bi-folder me-1"></i> '+getTheTitle(key4)+searchFileCount(row4)+'</li>';
 						});
@@ -901,8 +901,9 @@
 	} 
 	 
 		(function() { 
-		  new HSHeader('#header').init()
 	  
-		  new HSGoTo('.js-go-to')
-		  HSCore.components.HSTyped.init('.js-text-animation')
+		  new Typed('.js-text-animation', {
+		    strings: ["9년 동안의 취재", "10,391건의 문서와 동영상, 음성 파일", "127GB 분량의 기록물 데이터", "진상규명 관련 공식 기록물들"],
+		    typeSpeed: 60, loop: true, backSpeed: 100, backDelay: 1700
+		  })
 		})()

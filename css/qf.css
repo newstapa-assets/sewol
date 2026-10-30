@@ -73,3 +73,35 @@ figure {
   height: 100%;
 }
 
+
+/* 팩트체크 요청 창의 개인정보 동의 글 상자 */
+.sw-privacy-box {
+	padding: 1.5rem;
+	background-color: #e7eaf3;
+	color: #21325b;
+	font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+	font-size: 14.0625px;
+	line-height: 22.5px;
+	white-space: pre-line;
+}
+
+/* 의문과 팩트 목록 (큰 아코디언) */
+.sw-accordion-lg .accordion-button {
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
+	font-size: 1.125rem;
+}
+.sw-accordion-lg .accordion-body {
+	padding-bottom: 1.5rem;
+}
+
+/* 상단 메뉴 글자색 (이 페이지는 진한 글자) */
+.navbar-light .navbar-nav .nav-link {
+	color: #1e2022;
+}
+
+/* 글자를 드래그해 고를 때 색 */
+::selection {
+	color: #377dff;
+	background-color: rgba(55, 125, 255, .1);
+}

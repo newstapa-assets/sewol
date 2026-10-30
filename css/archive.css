@@ -2,11 +2,11 @@
 	td.resultsWrap {
 		cursor: pointer;
 	}
-	.nav-subtitle {
+	.sw-nav-subtitle {
 		margin-top: 18px;
 		
 	}
-	.navbar.navbar-vertical .navbar-nav .nav-link, .navbar.navbar-vertical .navbar-nav .nav-subtitle {
+	.navbar.sw-sidebar .navbar-nav .nav-link, .navbar.sw-sidebar .navbar-nav .sw-nav-subtitle {
 		padding: 0 1.5rem !important;
 	}
 	.nav-link.subMenu span{
@@ -15,7 +15,7 @@
 	.nav-link.subMenu:first-child {
 		margin-top: 5px;
 	}
-	.nav-vertical.nav.nav-tabs .nav-collapse .nav-link {
+	.sw-sidebar-nav.nav.nav-tabs .sw-nav-collapse .nav-link {
 		line-height: 200%;
 	}
 	.pointer, .getFileDataTrigger, .getSearchFileDataTrigger {
@@ -101,3 +101,149 @@
 	@media (prefers-reduced-motion: reduce) {
 		.icon-spin { animation-duration: 2.4s; }
 	}
+
+/* ---------- 왼쪽 사이드바 (992px 이상 고정, 그 미만은 '서브 메뉴'로 접힘) ---------- */
+.sw-nav-subtitle {
+	display: block;
+	color: #8c98a4;
+	font-size: .75rem;
+	letter-spacing: .03125rem;
+	text-transform: uppercase;
+}
+.sw-sidebar-nav.nav-tabs {
+	flex-direction: column;
+	border-bottom-width: 0;
+}
+.sw-sidebar-nav.nav .nav-item:not(:last-child) {
+	margin-right: 0;
+}
+.sw-sidebar-nav.nav-tabs .nav-link {
+	display: flex;
+	margin-bottom: 0;
+	border-width: 0 0 0 3px;
+	border-left-style: solid;
+	border-left-color: transparent;
+	font-size: .9375rem;
+	white-space: nowrap;
+}
+.sw-sidebar-nav.nav-tabs .sw-nav-subtitle {
+	border-left: 3px solid transparent;
+}
+.sw-aside-content {
+	padding-right: .75rem;
+	padding-left: .75rem;
+}
+.sw-page-header {
+	margin-bottom: 2.25rem;
+	padding-bottom: 1.75rem;
+	border-bottom: 1px solid #e7eaf3;
+}
+@media (max-width: 991.98px) {
+	.navbar.sw-sidebar .navbar-nav {
+		padding: 0;
+	}
+	.sw-sidebar .navbar-brand {
+		display: none;
+	}
+}
+@media (min-width: 768px) {
+	.sw-sidebar-body {
+		padding-top: 8.5rem;
+	}
+}
+@media (min-width: 992px) {
+	.sw-aside-layout .navbar-expand-lg.sw-sidebar {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		flex-flow: column;
+		width: 17rem;
+		height: 100%;
+		max-height: 100%;
+		padding: 0;
+		overflow-y: scroll;
+	}
+	.sw-aside-layout .sw-sidebar::-webkit-scrollbar {
+		width: .6125rem;
+	}
+	.sw-aside-layout .sw-sidebar::-webkit-scrollbar-thumb {
+		background-color: rgba(189, 197, 209, .6);
+	}
+	.sw-aside-layout .navbar-expand-lg.sw-sidebar .navbar-collapse {
+		display: block !important;
+		width: 100%;
+	}
+	.sw-aside-layout .sw-sidebar .sw-sidebar-brand {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 99;
+		width: 17rem;
+		padding-right: 1.5rem;
+		padding-left: 1.5rem;
+		background-color: #fff;
+		border-bottom: 1px solid rgba(33, 50, 91, .1);
+	}
+	.sw-aside-layout .sw-sidebar .navbar-brand {
+		display: flex;
+		flex-shrink: 0;
+		align-items: center;
+		margin-right: 0;
+	}
+	.sw-aside-layout .navbar.sw-sidebar .navbar-nav {
+		display: block;
+		flex-direction: column;
+		align-items: flex-start;
+		padding-top: 1.25rem;
+		padding-bottom: 1.25rem;
+	}
+	.sw-aside-layout .sw-aside-content {
+		margin-left: 17rem;
+	}
+}
+
+/* '서브 메뉴' 버튼 (991px 이하) */
+.sw-btn-white {
+	background-color: #fff;
+}
+.sw-btn-white:hover {
+	box-shadow: 0 3px 6px -2px rgba(140, 152, 164, .25);
+}
+/* 카테고리 카드: 테두리, 마우스를 올리면 살짝 위로 */
+.sw-card-bordered {
+	border-width: 1px;
+}
+.sw-card-transition {
+	transition: all .2s ease-in-out;
+}
+.sw-card-transition:hover,
+.sw-card-transition:focus {
+	transform: translateY(-.1875rem);
+}
+/* 파일 목록·검색 결과 줄 간격 */
+.sw-list-py-1 > li {
+	padding-top: .25rem;
+	padding-bottom: .25rem;
+}
+
+/* 상단 메뉴 글자색 (이 페이지는 진한 글자) */
+.navbar-light .navbar-nav .nav-link {
+	color: #1e2022;
+}
+.sw-sidebar-nav.nav-tabs .nav-link {
+	border-radius: 0;
+}
+.sw-sidebar-nav.nav-tabs .nav-link.active {
+	background-color: transparent;
+}
+/* 펼친 하위 메뉴 링크는 기본 글자색 (Bootstrap 의 .show > .nav-link 진한 색을 덮음) */
+html:not([data-theme="dark"]) .navbar-light .navbar-nav.sw-sidebar-nav .sw-nav-collapse.show > .nav-link:not(:hover):not(:focus):not(.active) {
+	color: #677788;
+}
+
+/* 글자를 드래그해 고를 때 색 */
+::selection {
+	color: #377dff;
+	background-color: rgba(55, 125, 255, .1);
+}

@@ -1,6 +1,6 @@
 /* 화면 모드 (라이트 / 다크 / 시스템)
    <html data-theme="dark"> 일 때만 적용된다. 값은 head.ejs 의 인라인 스크립트가 정한다.
-   기반 테마(Front, Bootstrap 5.1)는 다크 모드가 없어서, 사이트가 쓰는 클래스만 골라 덮는다.
+   Bootstrap 5.1 과 css/site.css 는 다크 모드가 없어서, 사이트가 쓰는 클래스만 골라 덮는다.
    모든 페이지 CSS(archive.css, qf.css, timeline.css 등) 뒤에 읽힌다. */
 
 /* ---------- 공통: 모드 선택 버튼 (두 모드 모두) ---------- */
@@ -11,9 +11,9 @@
 .themeToggle .dropdown-item.active, .themeToggle .dropdown-item:active { background: rgba(255, 115, 60, .12); color: #FF733C; }
 #header .navbar-brand .swf-1_logo { color: #000; }
 /* 창(모달)이 열려 있을 때는 '위로 가기' 버튼을 숨긴다 (모달 아래쪽 버튼과 겹침) */
-body.modal-open .js-go-to, body.modal-open .go-to { display: none !important; }
+body.modal-open .sw-go-to { display: none !important; }
 /* 휴대폰: 모드 버튼을 메뉴(햄버거) 버튼 바로 옆에 */
-.navbar-nav-wrap > .themeToggle + .navbar-toggler { margin-left: .25rem !important; }
+.sw-nav-wrap > .themeToggle + .navbar-toggler { margin-left: .25rem !important; }
 
 /* ---------- 다크 모드 색 ---------- */
 html[data-theme="dark"] {
@@ -50,7 +50,7 @@ html[data-theme="dark"] .border-start, html[data-theme="dark"] .border-end { bor
 
 /* 배경 클래스 */
 html[data-theme="dark"] .bg-white { background-color: var(--sw-surface) !important; }
-html[data-theme="dark"] .bg-light, html[data-theme="dark"] .bg-soft-light { background-color: var(--sw-surface-2) !important; }
+html[data-theme="dark"] .bg-light { background-color: var(--sw-surface-2) !important; }
 
 /* 상단 메뉴 */
 html[data-theme="dark"] #header, html[data-theme="dark"] .navbar-light,
@@ -96,17 +96,17 @@ html[data-theme="dark"] .input-group-text { background-color: var(--sw-surface-3
 html[data-theme="dark"] .btn-outline-secondary { color: var(--sw-text); border-color: var(--sw-border); }
 html[data-theme="dark"] .btn-outline-secondary:hover { background-color: var(--sw-surface-3); color: var(--sw-text-strong); }
 html[data-theme="dark"] .btn-secondary { background-color: var(--sw-surface-3); border-color: var(--sw-surface-3); color: var(--sw-text); }
-html[data-theme="dark"] .btn-ghost-secondary { color: var(--sw-text); }
+html[data-theme="dark"] .sw-icon-btn { color: var(--sw-text); }
 html[data-theme="dark"] .btn-link { color: var(--sw-link); }
-html[data-theme="dark"] .btn-white { background-color: var(--sw-surface-2); border-color: var(--sw-border); color: var(--sw-text); }
+html[data-theme="dark"] .sw-btn-white { background-color: var(--sw-surface-2); border-color: var(--sw-border); color: var(--sw-text); }
 
 /* 카드·목록·표·알림 */
 html[data-theme="dark"] .card { background-color: var(--sw-surface); border-color: var(--sw-border); color: var(--sw-text); box-shadow: none; }
 html[data-theme="dark"] .card-header, html[data-theme="dark"] .card-footer { background-color: var(--sw-surface-2); border-color: var(--sw-border); }
 html[data-theme="dark"] .list-group-item { background-color: var(--sw-surface); border-color: var(--sw-border); color: var(--sw-text); }
 html[data-theme="dark"] .table { color: var(--sw-text); border-color: var(--sw-border); --bs-table-bg: transparent; --bs-table-striped-bg: rgba(255, 255, 255, .03); }
-html[data-theme="dark"] .alert-soft-dark { background-color: var(--sw-surface-2) !important; color: var(--sw-text) !important; }
-html[data-theme="dark"] .alert-soft-dark .alert-heading, html[data-theme="dark"] .alert-soft-dark a { color: var(--sw-text-strong) !important; }
+html[data-theme="dark"] .sw-alert-soft-dark { background-color: var(--sw-surface-2) !important; color: var(--sw-text) !important; }
+html[data-theme="dark"] .sw-alert-soft-dark .alert-heading, html[data-theme="dark"] .sw-alert-soft-dark a { color: var(--sw-text-strong) !important; }
 html[data-theme="dark"] .alert-primary { background-color: rgba(55, 125, 255, .15); border-color: rgba(55, 125, 255, .35); color: var(--sw-text); }
 html[data-theme="dark"] .alert-info { background-color: rgba(9, 165, 190, .15); border-color: rgba(9, 165, 190, .35); color: var(--sw-text); }
 html[data-theme="dark"] .accordion-item, html[data-theme="dark"] .accordion-button { background-color: var(--sw-surface); color: var(--sw-text); border-color: var(--sw-border); }
@@ -118,17 +118,17 @@ html[data-theme="dark"] footer { background-color: #0d0f12 !important; color: va
 html[data-theme="dark"] footer a { color: var(--sw-text) !important; }
 
 /* 위로 가기 */
-html[data-theme="dark"] .js-go-to.go-to { background-color: var(--sw-surface-3); color: var(--sw-text); }
+html[data-theme="dark"] .sw-go-to.sw-go-to { background-color: var(--sw-surface-3); color: var(--sw-text); }
 
 /* 그림 안 글자색이 검은 로고·아이콘 */
 html[data-theme="dark"] .swf-icons { color: var(--sw-text); }
 
-/* ---------- Front 테마 구성 요소 ---------- */
-html[data-theme="dark"] .navbar-brand-wrapper { background-color: var(--sw-bg) !important; }
-html[data-theme="dark"] .input-card { background-color: var(--sw-surface) !important; box-shadow: none !important; }
-html[data-theme="dark"] .navbar-vertical .nav-link, html[data-theme="dark"] .navbar-sidebar .nav-link { color: var(--sw-text); }
-html[data-theme="dark"] .navbar-vertical .nav-link:hover, html[data-theme="dark"] .navbar-vertical .nav-link.active { color: var(--sw-accent); }
-html[data-theme="dark"] .nav-subtitle { color: var(--sw-muted); }
+/* ---------- 사이드바·검색창 ---------- */
+html[data-theme="dark"] .sw-sidebar-brand { background-color: var(--sw-bg) !important; }
+html[data-theme="dark"] .sw-input-card { background-color: var(--sw-surface) !important; box-shadow: none !important; }
+html[data-theme="dark"] .sw-sidebar .nav-link { color: var(--sw-text); }
+html[data-theme="dark"] .sw-sidebar .nav-link:hover, html[data-theme="dark"] .sw-sidebar .nav-link.active { color: var(--sw-accent); }
+html[data-theme="dark"] .sw-nav-subtitle { color: var(--sw-muted); }
 
 /* ---------- 데이터 아카이브 ---------- */
 html[data-theme="dark"] details.searchResultsfileList summary, html[data-theme="dark"] .searchResultsfileList li,
@@ -166,8 +166,7 @@ html[data-theme="dark"] .accordion-body-wrap table, html[data-theme="dark"] .acc
 html[data-theme="dark"] .accordion-body-wrap img { box-shadow: none; border-color: var(--sw-border); }
 html[data-theme="dark"] .accordion-item.shadow { box-shadow: none !important; border: 1px solid var(--sw-border) !important; }
 /* 팩트체크 요청 창의 개인정보 동의 글 상자 */
-html[data-theme="dark"] pre[class*=language-], html[data-theme="dark"] :not(pre) > code[class*=language-] { background: var(--sw-surface-2) !important; }
-html[data-theme="dark"] code[class*=language-], html[data-theme="dark"] pre[class*=language-] { color: var(--sw-text) !important; }
+html[data-theme="dark"] .sw-privacy-box { background: var(--sw-surface-2) !important; color: var(--sw-text) !important; }
 
 /* ---------- 시청각 타임라인 ---------- */
 html[data-theme="dark"] .jqtl-container { background-color: var(--sw-surface) !important; border-color: var(--sw-border) !important; }

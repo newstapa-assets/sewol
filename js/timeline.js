@@ -771,58 +771,7 @@ var SEWOL_ASSET_BASE = window.SEWOL_ASSET_BASE || "";
 		showManual();
 	});
 	
-  	new HSHeader('#header').init()
 	
  	
-  	new HSMegaMenu('.js-mega-menu', {
-	  	desktop: {
-			position: 'left'
-	  	}
-		})
  	
-  	new HSShowAnimation('.js-animation-link')
- 	
-  	HSBsValidation.init('.js-validate', {
-		onSubmit: data => {
-	  	data.event.preventDefault()
-	  	alert('Submited')
-		}
-  	})
- 	
-  	HSBsDropdown.init()
- 	
-  	new HSGoTo('.js-go-to')
- 	
-  	var sliderThumbs = new Swiper('.js-swiper-blog-journal-hero-thumbs', {
-		direction: 'vertical',
-		watchSlidesVisibility: true,
-		watchSlidesProgress: true,
-		slidesPerView: 3,
-		spaceBetween: 100,
-		history: false,
-		on: {
-	  	'afterInit': function (swiper) {
-			swiper.el.style.opacity = 1
-			swiper.el.querySelectorAll('.js-swiper-pagination-progress-body-helper')
-					.forEach($progress => $progress.style.transitionDuration = `${swiper.params.autoplay.delay}ms`)
-	  	}
-		}
-  	});
-	
-  	var swiper = new Swiper('.js-swiper-blog-journal-hero',{
-		effect: 'fade',
-		autoplay: true,
-		loop: true,
-		pagination: {
-	  	el: '.js-swiper-blog-journal-hero-pagination',
-	  	clickable: true,
-		},
-		thumbs: {
-	  	swiper: sliderThumbs
-		}
-  	});
-	
- 	
-  	new HSStickyBlock('.js-sticky-block', {
-		targetSelector: document.getElementById('header').classList.contains('navbar-fixed') ? '#header' : null
-  	}) 
+

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1078" height="675" viewBox="0 0 1078 675" fill="none">
+	<!-- 의문과 팩트: 기록 카드들 위로 돋보기를 댄 그림 (세월호, 사실과 기록 자체 그림) -->
+	<g stroke="#e0e0e0" stroke-opacity=".55" stroke-width="4" stroke-dasharray="8 9">
+		<rect x="62" y="4" width="470" height="178" rx="20"/>
+		<rect x="584" y="6" width="470" height="180" rx="20"/>
+		<rect x="62" y="232" width="470" height="178" rx="20"/>
+		<rect x="584" y="232" width="470" height="180" rx="20"/>
+	</g>
+	<g stroke="#e0e0e0" stroke-opacity=".5" stroke-width="4" fill="#fff">
+		<rect x="62" y="460" width="470" height="178" rx="20"/>
+		<path d="M240 460v178"/>
+		<rect x="584" y="460" width="470" height="178" rx="20"/>
+		<path d="M762 460v178"/>
+	</g>
+	<g fill="#d3d3d3">
+		<rect x="120" y="522" width="58" height="52" rx="8"/>
+		<rect x="641" y="522" width="58" height="52" rx="8"/>
+	</g>
+	<g fill="#fff">
+		<circle cx="136" cy="539" r="6"/>
+		<path d="M124 568l17-17 11 11 9-8 13 14z"/>
+		<circle cx="657" cy="539" r="6"/>
+		<path d="M645 568l17-17 11 11 9-8 13 14z"/>
+	</g>
+	<g stroke-linecap="round" stroke-width="12">
+		<path d="M304 509h55M826 509h55" stroke="#6a6a6a"/>
+		<path d="M304 557h93M431 557h34M826 557h93M953 557h34M305 593h24M358 593h24M411 593h24M827 593h24M880 593h24M933 593h24" stroke="#d0d0d0"/>
+	</g>
+	<g transform="rotate(-14 270 268)">
+		<rect x="28" y="172" width="486" height="190" rx="22" fill="#fff" stroke="#e0e0e0" stroke-opacity=".5" stroke-width="4"/>
+		<rect x="92" y="243" width="62" height="54" rx="7" stroke="#5c5c5c" stroke-width="7" fill="#fff"/>
+		<circle cx="108" cy="259" r="6" fill="#5c5c5c"/>
+		<path d="M96 293l20-20 12 12 10-9 14 17z" fill="#5c5c5c"/>
+		<g stroke-linecap="round" stroke-width="12">
+			<path d="M258 216h62" stroke="#5c5c5c"/>
+			<path d="M258 256h96M392 256h40M258 292h28M322 292h28M386 292h28" stroke="#cdcdcd"/>
+		</g>
+	</g>
+	<path d="M230 352 172 455" stroke="#9e9e9e" stroke-width="30" stroke-linecap="round"/>
+	<path d="M163 438l22 12" stroke="#fff" stroke-width="5"/>
+	<rect x="222" y="331" width="40" height="30" rx="8" transform="rotate(30 242 346)" fill="#5c5c5c"/>
+	<circle cx="295" cy="263" r="88" fill="#fff" fill-opacity=".35" stroke="#636363" stroke-width="20"/>
+	<path d="M262 199a72 72 0 0 1 64-6" stroke="#fff" stroke-opacity=".7" stroke-width="8" stroke-linecap="round"/>
+</svg>
